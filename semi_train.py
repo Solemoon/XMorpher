@@ -25,9 +25,9 @@ class RSeg(object):
         self.epoches = epoches
         self.iters=iters
         self.lr = lr
-        train_labeled_unlabeled_dir = '/F/sjc/heart_CT_5/train_labeled_unlabeled'
-        train_unlabeled_unlabeled_dir = '/F/sjc/heart_CT_5/train_unlabeled_unlabeled'
-        test_labeled_labeled_dir = '/F/sjc/heart_CT_5/test'
+        train_labeled_unlabeled_dir = 'data/train_labeled_unlabeled'
+        train_unlabeled_unlabeled_dir = 'data/train_unlabeled_unlabeled'
+        test_labeled_labeled_dir = 'data/test'
 
         self.results_dir = 'results'
         self.checkpoint_dir = 'weights'
