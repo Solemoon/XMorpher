@@ -1,11 +1,19 @@
-# XMorpher: Full Transformer for Deformable Medical Image Registration via Cross Attention
+# XMorpher
+--------------------------------------------------------------------------------
+
+
+# Paper
 Open source for MICCAI2022 paper: [XMorpher: Full Transformer for Deformable Medical Image Registration via Cross Attention]
 
-- Structure of XMorpher
+# Citation
+
+
+# Structure of XMorpher
 ![plot](./fig/XMorpher.jpg)
 
-- Data preparation
+# Available implementation
+- MindSpore/
+- Pytorch/
 
-- Training
 
-- Test and evaluation
+# Major results from our work
