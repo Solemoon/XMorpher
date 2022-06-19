@@ -17,3 +17,4 @@ Open source for MICCAI2022 paper: [XMorpher: Full Transformer for Deformable Med
 
 
 # Major results from our work
+![plot](./fig/result.jpg)
