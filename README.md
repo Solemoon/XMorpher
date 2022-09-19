@@ -32,10 +32,10 @@ If you use this code or use our pre-trained weights for your research, please ci
 
 
 # Available implementation
-- MindSpore/
+- MindSpore/ (updating)
 - Pytorch/
 
-**&#9733; News: implemented under two training strategies [VoxelMorph](https://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf) and [PC-Reg](http://www.digitalimaginggroup.ca/members/Shuo/Few-shot_Learning_for_Deformable_Medical_Image_Registration_with_Perception-Correspondence_Decoupling_and_Rever[845].pdf). and the detailed corresponding main functions are Unsup-train.py and Semi-train.py respectively**
+**&#9733; Notes: implemented under two training strategies [VoxelMorph](https://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf) and [PC-Reg](http://www.digitalimaginggroup.ca/members/Shuo/Few-shot_Learning_for_Deformable_Medical_Image_Registration_with_Perception-Correspondence_Decoupling_and_Rever[845].pdf) and the detailed corresponding main functions are Unsup-train.py and Semi-train.py respectively**
 
 
 # Major results from our work
