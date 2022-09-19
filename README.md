@@ -35,6 +35,16 @@ If you use this code or use our pre-trained weights for your research, please ci
 - MindSpore/
 - Pytorch/
 
+**&#9733; News: implemented under two training strategies [VoxelMorph](https://openaccess.thecvf.com/content_cvpr_2018/papers/Balakrishnan_An_Unsupervised_Learning_CVPR_2018_paper.pdf) and [PC-Reg](http://www.digitalimaginggroup.ca/members/Shuo/Few-shot_Learning_for_Deformable_Medical_Image_Registration_with_Perception-Correspondence_Decoupling_and_Rever[845].pdf). and the detailed corresponding main functions are Unsup-train.py and Semi-train.py respectively**
+
 
 # Major results from our work
+1. **XMorpher has the best DSC score and Jacobian score under both strategies**
+2. **XMorpher has visual superiority on some detailed structures**
+
 ![plot](./fig/result.jpg)
+
+
+
+# Acknowledgement
+This work was supported in part by the National Natural Science Foundation under grants (62171125, 61828101), CAAI-Huawei MindSpore Open Fund, CANN(Compute Architecture for Neural Networks), Ascend AI Processor, and Big Data Computing Center of Southeast University.
