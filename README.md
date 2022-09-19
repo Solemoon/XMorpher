@@ -4,7 +4,7 @@
 
 Medical image registration is a typical two-image task which requires specialized feature representation networks for deep-learning-based methods (The existing methods and their limitations have been evaluated in our papers). Therefore, we designed a X-shape feature representation backbone which combines the relationship-aware capacity of Transformer and the traits of two-image tasks which foucus not only on structure information of each image but also on cross correspondence between the image pair. The overall structure of our network is following:
 
-<p align="center"><img width="100%" src="fig/XMorpher.jpg" /></p>
+<p align="center"><img width="90%" src="fig/XMorpher.jpg" /></p>
 
 # Paper
 This repository provides the official implementation of XMorpher and its application under two different strategies in the following paper:
