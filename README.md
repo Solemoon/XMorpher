@@ -42,7 +42,8 @@ If you use this code or use our pre-trained weights for your research, please ci
 1. **XMorpher has the best DSC score and Jacobian score under both strategies**
 2. **XMorpher has visual superiority on some detailed structures**
 
-![plot](./fig/result.jpg)
+<p align="center"><img width="90%" src="fig/table.png" /></p>
+<p align="center"><img width="90%" src="fig/result.png" /></p>
 
 
 
