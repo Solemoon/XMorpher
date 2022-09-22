@@ -297,8 +297,9 @@ class CrossTransformerBlock3D(nn.Module):
             x = x + self.forward_part2(x)
 
         return x
+    
 
-
+# Statement for "Full Transformer": stride=kernel size, convolution degenerates into learnable pooling or upsample
 class PatchMerging(nn.Module):
     """ Patch Merging Layer
 
@@ -340,7 +341,7 @@ class PatchExpand(nn.Module):
     def __init__(self, dim, norm_layer=nn.LayerNorm):
         super().__init__()
         self.dim = dim
-        self.up_conv = nn.ConvTranspose3d(dim, dim//2, (4, 4, 4), stride=2, padding=1)
+        self.up_conv = nn.ConvTranspose3d(dim, dim//2, (2, 2, 2), stride=2, padding=0)
         self.norm = norm_layer(dim // 2)
 
     def forward(self, x):
