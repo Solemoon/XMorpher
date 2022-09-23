@@ -22,11 +22,13 @@ Jean-Louis Coatrieux<sup>1,2,3</sup>, Huazhong Shu<sup>1,2,3</sup>, Guanyu Yang<
 # Citation
 If you use this code or use our pre-trained weights for your research, please cite our papers:
 ```
-@article{shi2022xmorpher,
+@inproceedings{shi2022xmorpher,
   title={XMorpher: Full Transformer for Deformable Medical Image Registration via Cross Attention},
   author={Shi, Jiacheng and He, Yuting and Kong, Youyong and Coatrieux, Jean-Louis and Shu, Huazhong and Yang, Guanyu and Li, Shuo},
-  journal={arXiv preprint arXiv:2206.07349},
-  year={2022}
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={217--226},
+  year={2022},
+  organization={Springer}
 }
 ```
 
