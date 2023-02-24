@@ -54,6 +54,7 @@ def window_partition(x, window_size):
     return windows
 
 
+# We implemented window area partition in this way for fast computation, here is the example of the amplification coefficient = 3
 def window_area_partition(x, window_size):
     """
     Args:
@@ -68,6 +69,8 @@ def window_area_partition(x, window_size):
     x = x.view(B, D // window_size[0], window_size[0], H // window_size[1], window_size[1], W // window_size[2],
                window_size[2], C)
     windows = x.permute(0, 1, 3, 5, 2, 4, 6, 7).contiguous().view(B, d, h, w, reduce(mul, window_size), C)
+    
+    # We implemented B=1 in our experiments for limited gpu
     if B > 1:
         print('wrong')
         return -1
@@ -113,6 +116,10 @@ def window_area_partition(x, window_size):
     b[:, 24] = a[2:, 2:, :-2].reshape(d*h*w, sb, C)
     b[:, 25] = a[2:, 2:, 1:-1].reshape(d*h*w, sb, C)
     b[:, 26] = a[2:, 2:, 2:].reshape(d*h*w, sb, C)
+    
+    b = b.reshape(d*h*w, 3, 3, 3, window_size[0], window_size[1], window_size[2], C)
+    b = b.permute(0, 1, 4, 2, 5, 3, 6, 7)
+    b = b.reshape(-1, window_size[0] * 3, window_size[1] * 3, window_size[2] * 3, C)
 
     b = b.view(-1, sb * 27, C)
     return b
@@ -424,8 +431,10 @@ class BasicLayer(nn.Module):
         # B, D, H, W, C = x.shape
 
         for blk in self.blocks:
-            x = blk(x, xa)
-            xa = blk(xa, x)
+            next_x = blk(x, xa)
+            next_xa = blk(xa, x)
+            x = next_a
+            xa = next_xa
 
         if self.downsample is not None:
             x_down = self.downsample(x)
@@ -503,9 +512,10 @@ class BasicLayerUp(nn.Module):
         # B, D, H, W, C = x.shape
 
         for blk in self.blocks:
-            x = blk(x, xa)
-            xa = blk(xa, x)
-            print(x.shape, xa.shape)
+            next_x = blk(x, xa)
+            next_xa = blk(xa, x)
+            x = next_a
+            xa = next_xa
 
         if self.upsample is not None:
             x_up = self.upsample(x)
