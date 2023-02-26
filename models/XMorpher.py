@@ -62,65 +62,63 @@ def window_area_partition(x, window_size):
         window_size (tuple[int]): window size
 
     Returns:
-        windows: (B*num_windows, a*b*c*window_size*window_size*window_size, C)  # we set a=b=c=3
+        windows: (B*num_windows, window_size*window_size, C)
     """
     B, D, H, W, C = x.shape
-    d, h, w = D // window_size[0], H // window_size[1],W // window_size[2]
+    d, h, w = D // window_size[0], H // window_size[1], W // window_size[2]
     x = x.view(B, D // window_size[0], window_size[0], H // window_size[1], window_size[1], W // window_size[2],
                window_size[2], C)
-    windows = x.permute(0, 1, 3, 5, 2, 4, 6, 7).contiguous().view(B, d, h, w, reduce(mul, window_size), C)
-    
-    # We implemented B=1 in our experiments for limited gpu
+    # windows = x.permute(0, 1, 3, 5, 2, 4, 6, 7).contiguous().view(B, d, h, w, reduce(mul, window_size), C)
+    windows = x.permute(0, 1, 3, 5, 2, 4, 6, 7)
     if B > 1:
         print('wrong')
         return -1
     x = windows[0]
-    dim = (0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+    dim = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
     a = F.pad(x, dim, "constant")
 
-    sb = reduce(mul, window_size)
+    b = torch.zeros(size=(d*h*w, 27, window_size[0], window_size[1], window_size[2], C)).cuda()
+    b[:, 0] = a[:-2, :-2, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 1] = a[:-2, :-2, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 2] = a[:-2, :-2, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b = torch.zeros(size=(d*h*w, 27, sb, C)).cuda()
-    b[:, 0] = a[:-2, :-2, :-2].reshape(d*h*w, sb, C)
-    b[:, 1] = a[:-2, :-2, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 2] = a[:-2, :-2, 2:].reshape(d*h*w, sb, C)
+    b[:, 3] = a[:-2, 1:-1, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 4] = a[:-2, 1:-1, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 5] = a[:-2, 1:-1, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 3] = a[:-2, 1:-1, :-2].reshape(d*h*w, sb, C)
-    b[:, 4] = a[:-2, 1:-1, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 5] = a[:-2, 1:-1, 2:].reshape(d*h*w, sb, C)
+    b[:, 6] = a[:-2, 2:, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 7] = a[:-2, 2:, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 8] = a[:-2, 2:, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 6] = a[:-2, 2:, :-2].reshape(d*h*w, sb, C)
-    b[:, 7] = a[:-2, 2:, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 8] = a[:-2, 2:, 2:].reshape(d*h*w, sb, C)
+    b[:, 9] = a[1:-1, :-2, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 10] = a[1:-1, :-2, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 11] = a[1:-1, :-2, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 9] = a[1:-1, :-2, :-2].reshape(d*h*w, sb, C)
-    b[:, 10] = a[1:-1, :-2, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 11] = a[1:-1, :-2, 2:].reshape(d*h*w, sb, C)
+    b[:, 12] = a[1:-1, 1:-1, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 13] = a[1:-1, 1:-1, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 14] = a[1:-1, 1:-1, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 12] = a[1:-1, 1:-1, :-2].reshape(d*h*w, sb, C)
-    b[:, 13] = a[1:-1, 1:-1, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 14] = a[1:-1, 1:-1, 2:].reshape(d*h*w, sb, C)
+    b[:, 15] = a[1:-1, 2:, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 16] = a[1:-1, 2:, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 17] = a[1:-1, 2:, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 15] = a[1:-1, 2:, :-2].reshape(d*h*w, sb, C)
-    b[:, 16] = a[1:-1, 2:, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 17] = a[1:-1, 2:, 2:].reshape(d*h*w, sb, C)
+    b[:, 18] = a[2:, :-2, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 19] = a[2:, :-2, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 21] = a[2:, :-2, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 18] = a[2:, :-2, :-2].reshape(d*h*w, sb, C)
-    b[:, 19] = a[2:, :-2, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 21] = a[2:, :-2, 2:].reshape(d*h*w, sb, C)
+    b[:, 21] = a[2:, 1:-1, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 22] = a[2:, 1:-1, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 23] = a[2:, 1:-1, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 21] = a[2:, 1:-1, :-2].reshape(d*h*w, sb, C)
-    b[:, 22] = a[2:, 1:-1, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 23] = a[2:, 1:-1, 2:].reshape(d*h*w, sb, C)
+    b[:, 24] = a[2:, 2:, :-2].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 25] = a[2:, 2:, 1:-1].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
+    b[:, 26] = a[2:, 2:, 2:].reshape(d*h*w, window_size[0], window_size[1], window_size[2], C)
 
-    b[:, 24] = a[2:, 2:, :-2].reshape(d*h*w, sb, C)
-    b[:, 25] = a[2:, 2:, 1:-1].reshape(d*h*w, sb, C)
-    b[:, 26] = a[2:, 2:, 2:].reshape(d*h*w, sb, C)
-    
     b = b.reshape(d*h*w, 3, 3, 3, window_size[0], window_size[1], window_size[2], C)
     b = b.permute(0, 1, 4, 2, 5, 3, 6, 7)
     b = b.reshape(-1, window_size[0] * 3, window_size[1] * 3, window_size[2] * 3, C)
 
+    sb = reduce(mul, window_size)
     b = b.view(-1, sb * 27, C)
     return b
 
